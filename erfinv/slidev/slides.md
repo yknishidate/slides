@@ -1,637 +1,354 @@
 ---
-# try also 'default' to start simple
 theme: seriph
-# random image from a curated Unsplash collection by Anthony
-# like them? see https://unsplash.com/collections/94734566/slidev
 background: https://cover.sli.dev
-# some information about your slides (markdown enabled)
-title: Welcome to Slidev
+title: Approximating the erfinv function
 info: |
-  ## Slidev Starter Template
-  Presentation slides for developers.
-
-  Learn more at [Sli.dev](https://sli.dev)
-# apply UnoCSS classes to the current slide
-class: text-center
-# https://sli.dev/features/drawing
-drawings:
-  persist: false
-# slide transition: https://sli.dev/guide/animations.html#slide-transitions
+  ## erfinv 関数の近似
+  Mike Giles
 transition: slide-left
-# enable MDC Syntax: https://sli.dev/features/mdc
 mdc: true
-# duration of the presentation
-duration: 35min
 ---
 
-# Welcome to Slidev
+# erfinv 関数の近似
 
-Presentation slides for developers
-
-<div @click="$slidev.nav.next" class="mt-12 py-1" hover:bg="white op-10">
-  Press Space for next page <carbon:arrow-right />
+<div class="opacity-80">
+Mike Giles
 </div>
 
-<div class="abs-br m-6 text-xl">
-  <button @click="$slidev.nav.openInEditor()" title="Open in Editor" class="slidev-icon-btn">
-    <carbon:edit />
-  </button>
-  <a href="https://github.com/slidevjs/slidev" target="_blank" class="slidev-icon-btn">
-    <carbon:logo-github />
-  </a>
+<div class="abs-br m-6 flex gap-2">
+  <div class="text-sm opacity-50">
+  Based on "Approximating the erfinv function"
+  </div>
 </div>
 
 <!--
-The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
+逆誤差関数 erfinv は数学ライブラリの標準的な構成要素であり、特に一様乱数を正規乱数へ変換する統計的応用で有用である。
+本プレゼンテーションでは、GPU 実行におけるワープ・ダイバージェンス（warp divergence）を低減し、効率的に計算する手法を紹介します。
 -->
 
 ---
-transition: fade-out
----
 
-# What is Slidev?
+# はじめに：逆誤差関数とは
 
-Slidev is a slides maker and presenter designed for developers, consist of the following features
-
-- 📝 **Text-based** - focus on the content with Markdown, and then style them later
-- 🎨 **Themable** - themes can be shared and re-used as npm packages
-- 🧑‍💻 **Developer Friendly** - code highlighting, live coding with autocompletion
-- 🤹 **Interactive** - embed Vue components to enhance your expressions
-- 🎥 **Recording** - built-in recording and camera view
-- 📤 **Portable** - export to PDF, PPTX, PNGs, or even a hostable SPA
-- 🛠 **Hackable** - virtually anything that's possible on a webpage is possible in Slidev
-<br>
-<br>
-
-Read more about [Why Slidev?](https://sli.dev/guide/why)
-
-<!--
-You can have `style` tag in markdown to override the style for the current page.
-Learn more: https://sli.dev/features/slide-scope-style
--->
-
-<style>
-h1 {
-  background-color: #2B90B6;
-  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
-  background-size: 100%;
-  -webkit-background-clip: text;
-  -moz-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -moz-text-fill-color: transparent;
-}
-</style>
-
-<!--
-Here is another comment.
--->
-
----
-transition: slide-up
-level: 2
----
-
-# Navigation
-
-Hover on the bottom-left corner to see the navigation's controls panel, [learn more](https://sli.dev/guide/ui#navigation-bar)
-
-## Keyboard Shortcuts
-
-|                                                     |                             |
-| --------------------------------------------------- | --------------------------- |
-| <kbd>right</kbd> / <kbd>space</kbd>                 | next animation or slide     |
-| <kbd>left</kbd>  / <kbd>shift</kbd><kbd>space</kbd> | previous animation or slide |
-| <kbd>up</kbd>                                       | previous slide              |
-| <kbd>down</kbd>                                     | next slide                  |
-
-<!-- https://sli.dev/guide/animations.html#click-animation -->
-<img
-  v-click
-  class="absolute -bottom-9 -left-7 w-80 opacity-50"
-  src="https://sli.dev/assets/arrow-bottom-left.svg"
-  alt=""
-/>
-<p v-after class="absolute bottom-23 left-45 opacity-30 transform -rotate-10">Here!</p>
-
----
-layout: two-cols
-layoutClass: gap-16
----
-
-# Table of contents
-
-You can use the `Toc` component to generate a table of contents for your slides:
-
-```html
-<Toc minDepth="1" maxDepth="1" />
-```
-
-The title will be inferred from your slide content, or you can override it with `title` and `level` in your frontmatter.
-
-::right::
-
-<Toc text-sm minDepth="1" maxDepth="2" />
-
----
-layout: image-right
-image: https://cover.sli.dev
----
-
-# Code
-
-Use code snippets and get the highlighting directly, and even types hover!
-
-```ts [filename-example.ts] {all|4|6|6-7|9|all} twoslash
-// TwoSlash enables TypeScript hover information
-// and errors in markdown code blocks
-// More at https://shiki.style/packages/twoslash
-import { computed, ref } from 'vue'
-
-const count = ref(0)
-const doubled = computed(() => count.value * 2)
-
-doubled.value = 2
-```
-
-<arrow v-click="[4, 5]" x1="350" y1="310" x2="195" y2="342" color="#953" width="2" arrowSize="1" />
-
-<!-- This allow you to embed external code blocks -->
-<<< @/snippets/external.ts#snippet
-
-<!-- Footer -->
-
-[Learn more](https://sli.dev/features/line-highlighting)
-
-<!-- Inline style -->
-<style>
-.footnotes-sep {
-  @apply mt-5 opacity-10;
-}
-.footnotes {
-  @apply text-sm opacity-75;
-}
-.footnote-backref {
-  display: none;
-}
-</style>
-
-<!--
-Notes can also sync with clicks
-
-[click] This will be highlighted after the first click
-
-[click] Highlighted with `count = ref(0)`
-
-[click:3] Last click (skip two clicks)
--->
-
----
-level: 2
----
-
-# Shiki Magic Move
-
-Powered by [shiki-magic-move](https://shiki-magic-move.netlify.app/), Slidev supports animations across multiple code snippets.
-
-Add multiple code blocks and wrap them with <code>````md magic-move</code> (four backticks) to enable the magic move. For example:
-
-````md magic-move {lines: true}
-```ts {*|2|*}
-// step 1
-const author = reactive({
-  name: 'John Doe',
-  books: [
-    'Vue 2 - Advanced Guide',
-    'Vue 3 - Basic Guide',
-    'Vue 4 - The Mystery'
-  ]
-})
-```
-
-```ts {*|1-2|3-4|3-4,8}
-// step 2
-export default {
-  data() {
-    return {
-      author: {
-        name: 'John Doe',
-        books: [
-          'Vue 2 - Advanced Guide',
-          'Vue 3 - Basic Guide',
-          'Vue 4 - The Mystery'
-        ]
-      }
-    }
-  }
-}
-```
-
-```ts
-// step 3
-export default {
-  data: () => ({
-    author: {
-      name: 'John Doe',
-      books: [
-        'Vue 2 - Advanced Guide',
-        'Vue 3 - Basic Guide',
-        'Vue 4 - The Mystery'
-      ]
-    }
-  })
-}
-```
-
-Non-code blocks are ignored.
-
-```vue
-<!-- step 4 -->
-<script setup>
-const author = {
-  name: 'John Doe',
-  books: [
-    'Vue 2 - Advanced Guide',
-    'Vue 3 - Basic Guide',
-    'Vue 4 - The Mystery'
-  ]
-}
-</script>
-```
-````
-
----
-
-# Components
-
-<div grid="~ cols-2 gap-4">
+<div class="grid grid-cols-2 gap-8">
 <div>
 
-You can use Vue components directly inside your slides.
+- **基本関数**: $\cos, \sin, e^x$ 等と同様に、標準的な数学ライブラリ (MKL, ACML, CUDA) に含まれる。
+- **定義**: 誤差関数 $\mathrm{erf}(x)$ の逆関数。
 
-We have provided a few built-in components like `<Tweet/>` and `<Youtube/>` that you can use directly. And adding your custom components is also super easy.
-
-```html
-<Counter :count="10" />
-```
-
-<!-- ./components/Counter.vue -->
-<Counter :count="10" m="t-4" />
-
-Check out [the guides](https://sli.dev/builtin/components.html) for more.
+$$
+\mathrm{erf}(x)=\frac{2}{\sqrt{\pi}}\int_{0}^{x} e^{-t^{2}} dt
+$$
 
 </div>
 <div>
 
-```html
-<Tweet id="1390115482657726468" />
-```
+### 主な用途：計算ファイナンス
 
-<Tweet id="1390115482657726468" scale="0.65" />
+- **モンテカルロ・シミュレーション**:
+    - 一様乱数 $x \in (0,1)$ を正規乱数 $y$ に変換。
+- **正規分布の累積分布関数 (CDF)**:
+    - $\Phi(x)$ と $\mathrm{erf}$ は密接に関連。
+
+$$
+\Phi^{-1}(x)=\sqrt{2} \mathrm{erfinv}(2x-1)
+$$
 
 </div>
 </div>
 
 <!--
-Presenter note with **bold**, *italic*, and ~~striked~~ text.
-
-Also, HTML elements are valid:
-<div class="flex w-full">
-  <span style="flex-grow: 1;">Left content</span>
-  <span>Right content</span>
-</div>
+erfinv は、特に計算ファイナンスの分野で重要です。
+一様乱数を正規乱数に変換する「逆関数法」で使用されます。
+Box-Muller法やZiggurat法もありますが、準乱数（QMC）を使用する場合、低偏差列の特性を保つためにこの逆関数法が好まれます。
 -->
 
 ---
-class: px-20
----
 
-# Themes
+# 既存手法：CPU 向け実装
 
-Slidev comes with powerful theming support. Themes can provide styles, layouts, components, or even configurations for tools. Switching between themes by just **one edit** in your frontmatter:
+<div class="grid grid-cols-2 gap-8">
+<div>
 
-<div grid="~ cols-2 gap-2" m="t-2">
-
-```yaml
----
-theme: default
----
-```
-
-```yaml
----
-theme: seriph
----
-```
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-default/01.png?raw=true" alt="">
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-seriph/01.png?raw=true" alt="">
+### 従来のアルゴリズム
+- **多項式/有理式近似**を使用（例: Blair et al. [BEJ76]）。
+- **条件分岐**で計算コストを最適化。
+    - **領域A ($|x|>0.9375$)**: 高コスト（$\log, \sqrt{}$）
+    - **領域B ($|x|>0.75$)**: 中コスト
+    - **領域C (その他)**: 低コスト（確率 0.75）
 
 </div>
+<div>
 
-Read more about [How to use a theme](https://sli.dev/guide/theme-addon#use-theme) and
-check out the [Awesome Themes Gallery](https://sli.dev/resources/theme-gallery).
+### 疑似コード (Table 1)
 
----
-
-# Clicks Animations
-
-You can add `v-click` to elements to add a click animation.
-
-<div v-click>
-
-This shows up when you click the slide:
-
-```html
-<div v-click>This shows up when you click the slide.</div>
+```cpp
+a = |x|
+if a > 0.9375 then
+    t = sqrt(log(a))
+    y = p1(t) / p2(t)
+else if a > 0.75 then
+    y = p3(a) / p4(a)
+else
+    y = p5(a) / p6(a)
+end if
+if x < 0 then
+    y = -y
+end if
 ```
 
 </div>
+</div>
 
-<br>
+<!--
+CPUでは条件分岐は有効な最適化です。
+Blairらのアルゴリズムでは、最も軽い分岐（領域C）に入る確率は75%あり、全体的な平均コストを下げることができます。
+-->
+
+---
+
+# GPU での問題点：ワープ・ダイバージェンス
+
+<div class="grid grid-cols-2 gap-8">
+<div>
+
+### SIMT アーキテクチャの制約
+- GPU は 32 スレッド (ワープ) が同じ命令を実行。
+- **どこか1つでも**重い分岐に入ると、全スレッドが待たされる。
+
+</div>
+<div>
 
 <v-click>
 
-The <span v-mark.red="3"><code>v-mark</code> directive</span>
-also allows you to add
-<span v-mark.circle.orange="4">inline marks</span>
-, powered by [Rough Notation](https://roughnotation.com/):
+### 確率の罠
+- 1スレッドが「低コスト領域」を通る確率:
+    - $P(\text{Low Cost}) = 0.75$
+- 32スレッド**全員**が「低コスト領域」を通る確率:
+    - $0.75^{32} \approx 0.0001 (0.01\%)$
 
-```html
-<span v-mark.underline.orange>inline markers</span>
-```
+→ ほぼ全ワープで「高コストな分岐」が実行される
 
 </v-click>
 
-<div mt-20 v-click>
-
-[Learn more](https://sli.dev/guide/animations#click-animation)
-
 </div>
+</div>
+
+<!--
+CPUでは条件分岐は有効な最適化ですが、SIMTアーキテクチャのGPUでは逆効果になりえます。
+Blairらのアルゴリズムでは、最も軽い分岐に入る確率は75%ですが、
+32スレッド全員がそこに入る確率は0.01%しかありません。
+結果として、ほとんどのワープで「全ての分岐」が実行されることになり、最悪ケースのコストがかかってしまいます。
+-->
 
 ---
 
-# Motions
+# 提案手法：アプローチ
 
-Motion animations are powered by [@vueuse/motion](https://motion.vueuse.org/), triggered by `v-motion` directive.
+<div class="text-xl">
 
-```html
-<div
-  v-motion
-  :initial="{ x: -80 }"
-  :enter="{ x: 0 }"
-  :click-3="{ x: 80 }"
-  :leave="{ x: 1000 }"
->
-  Slidev
-</div>
-```
-
-<div class="w-60 relative">
-  <div class="relative w-40 h-40">
-    <img
-      v-motion
-      :initial="{ x: 800, y: -100, scale: 1.5, rotate: -50 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-square.png"
-      alt=""
-    />
-    <img
-      v-motion
-      :initial="{ y: 500, x: -100, scale: 2 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-circle.png"
-      alt=""
-    />
-    <img
-      v-motion
-      :initial="{ x: 600, y: 400, scale: 2, rotate: 100 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-triangle.png"
-      alt=""
-    />
-  </div>
-
-  <div
-    class="text-5xl absolute top-14 left-40 text-[#2B90B6] -z-1"
-    v-motion
-    :initial="{ x: -80, opacity: 0}"
-    :enter="{ x: 0, opacity: 1, transition: { delay: 2000, duration: 1000 } }">
-    Slidev
-  </div>
-</div>
-
-<!-- vue script setup scripts can be directly used in markdown, and will only affects current page -->
-<script setup lang="ts">
-const final = {
-  x: 0,
-  y: 0,
-  rotate: 0,
-  scale: 1,
-  transition: {
-    type: 'spring',
-    damping: 10,
-    stiffness: 20,
-    mass: 2
-  }
-}
-</script>
-
-<div
-  v-motion
-  :initial="{ x:35, y: 30, opacity: 0}"
-  :enter="{ y: 0, opacity: 1, transition: { delay: 3500 } }">
-
-[Learn more](https://sli.dev/guide/animations.html#motion)
+**条件分岐を減らし、ワープ内の挙動を揃える**
 
 </div>
 
----
+<br>
 
-# $\LaTeX$
+- **単精度 (SP)**: 2つの領域（中心・尾部）に簡略化。
+- **倍精度 (DP)**: 精度要求のため3つの領域を使用するが、構造は単純化。
 
-$\LaTeX$ is supported out-of-box. Powered by [$\KaTeX$](https://katex.org/).
-
-<div h-3 />
-
-Inline $\sqrt{3x-1}+(1+x)^2$
-
-Block
-$$ {1|3|all}
-\begin{aligned}
-\nabla \cdot \vec{E} &= \frac{\rho}{\varepsilon_0} \\
-\nabla \cdot \vec{B} &= 0 \\
-\nabla \times \vec{E} &= -\frac{\partial\vec{B}}{\partial t} \\
-\nabla \times \vec{B} &= \mu_0\vec{J} + \mu_0\varepsilon_0\frac{\partial\vec{E}}{\partial t}
-\end{aligned}
+$$
+\mathrm{erfinvSP}(x)=
+\begin{cases}
+x p_1(w), & w\le w_1 \quad \text{（中心領域：高確率）}\\
+x p_2(s), & w_1 < w \quad \text{（尾部領域：稀）}
+\end{cases}
 $$
 
-[Learn more](https://sli.dev/features/latex)
+ここで $w=-\log(1-x^2)$、$s=\sqrt{w}$
 
----
+<!--
+提案手法の核心は、分岐の数を減らし、かつ「ほとんどのスレッドが同じ分岐（中心領域）を通る」ように境界 $w_1$ を設定することです。
+これにより、ワープ・ダイバージェンスの発生確率そのものを制御可能にします。
+-->
 
-# Diagrams
-
-You can create diagrams / graphs from textual descriptions, directly in your Markdown.
-
-<div class="grid grid-cols-4 gap-5 pt-4 -mb-6">
-
-```mermaid {scale: 0.5, alt: 'A simple sequence diagram'}
-sequenceDiagram
-    Alice->John: Hello John, how are you?
-    Note over Alice,John: A typical interaction
-```
-
-```mermaid {theme: 'neutral', scale: 0.8}
-graph TD
-B[Text] --> C{Decision}
-C -->|One| D[Result 1]
-C -->|Two| E[Result 2]
-```
-
-```mermaid
-mindmap
-  root((mindmap))
-    Origins
-      Long history
-      ::icon(fa fa-book)
-      Popularisation
-        British popular psychology author Tony Buzan
-    Research
-      On effectiveness<br/>and features
-      On Automatic creation
-        Uses
-            Creative techniques
-            Strategic planning
-            Argument mapping
-    Tools
-      Pen and paper
-      Mermaid
-```
-
-```plantuml {scale: 0.7}
-@startuml
-
-package "Some Group" {
-  HTTP - [First Component]
-  [Another Component]
-}
-
-node "Other Groups" {
-  FTP - [Second Component]
-  [First Component] --> FTP
-}
-
-cloud {
-  [Example 1]
-}
-
-database "MySql" {
-  folder "This is my folder" {
-    [Folder 3]
-  }
-  frame "Foo" {
-    [Frame 4]
-  }
-}
-
-[Another Component] --> [Example 1]
-[Example 1] --> [Folder 3]
-[Folder 3] --> [Frame 4]
-
-@enduml
-```
-
-</div>
-
-Learn more: [Mermaid Diagrams](https://sli.dev/features/mermaid) and [PlantUML Diagrams](https://sli.dev/features/plantuml)
-
----
-foo: bar
-dragPos:
-  square: 691,32,167,_,-16
----
-
-# Draggable Elements
-
-Double-click on the draggable elements to edit their positions.
-
-<br>
-
-###### Directive Usage
-
-```md
-<img v-drag="'square'" src="https://sli.dev/logo.png">
-```
-
-<br>
-
-###### Component Usage
-
-```md
-<v-drag text-3xl>
-  <div class="i-carbon:arrow-up" />
-  Use the `v-drag` component to have a draggable container!
-</v-drag>
-```
-
-<v-drag pos="663,206,261,_,-15">
-  <div text-center text-3xl border border-main rounded>
-    Double-click me!
-  </div>
-</v-drag>
-
-<img v-drag="'square'" src="https://sli.dev/logo.png">
-
-###### Draggable Arrow
-
-```md
-<v-drag-arrow two-way />
-```
-
-<v-drag-arrow pos="67,452,253,46" two-way op70 />
-
----
-src: ./pages/imported-slides.md
-hide: false
----
-
----
-
-# Monaco Editor
-
-Slidev provides built-in Monaco Editor support.
-
-Add `{monaco}` to the code block to turn it into an editor:
-
-```ts {monaco}
-import { ref } from 'vue'
-import { emptyArray } from './external'
-
-const arr = ref(emptyArray(10))
-```
-
-Use `{monaco-run}` to create an editor that can execute the code directly in the slide:
-
-```ts {monaco-run}
-import { version } from 'vue'
-import { emptyArray, sayHello } from './external'
-
-sayHello()
-console.log(`vue ${version}`)
-console.log(emptyArray<number>(10).reduce(fib => [...fib, fib.at(-1)! + fib.at(-2)!], [1, 1]))
-```
 
 ---
 layout: center
-class: text-center
 ---
 
-# Learn More
+![fig1](/images/fig1.png){width="50%" class="mx-auto"}
 
-[Documentation](https://sli.dev) · [GitHub](https://github.com/slidevjs/slidev) · [Showcases](https://sli.dev/resources/showcases)
+図1 $\mathrm{erfinv}(x)/x$ を $w$ および $s\equiv\sqrt{w}$ に対してプロット
 
-<PoweredBySlidev mt-10 />
+---
+
+# 単精度 (SP) 近似の構成
+
+### 近似関数の設計指針
+1.  **$x \approx 0$ (中心)**: $\mathrm{erfinv}$ は奇関数 $\to x p_1(w)$ の形 ($p_1$ は $w$ の多項式)。
+2.  **$x \approx \pm 1$ (尾部)**: $\mathrm{erfinv} \approx \pm \sqrt{w} \to x p_2(\sqrt{w})$ の形。
+
+
+### パラメータの選択（トレードオフ）
+
+| $w_1$ (閾値) | $p_1$ 次数 | 尾部確率 (1スレッド) | ダイバージェンス確率 (32スレッド) |
+| :--- | :---: | :---: | :---: |
+| **5.00** | 8 | 0.3% | ~10% |
+| **6.25** | **9** | **0.1%** | **~3%** |
+| 16.00 | 14 | 0% | 0% |
+
+<!--
+表に示すように、境界 $w_1$ をどこに置くかでトレードオフが生じます。
+$w_1=5.00$ なら多項式の次数は低くて済みますが、ダイバージェンス確率は10%です。
+$w_1=6.25$ に上げると、次数は1つ増えますが、ダイバージェンス確率は3%まで下がります。
+著者はこのバランスからアプローチを選択しています。
+-->
+
+---
+
+# 倍精度 (DP) への拡張
+
+倍精度では広い範囲 ($w \approx 36$) をカバーする必要があります。
+
+$$
+\mathrm{erfinvDP}(x)=
+\begin{cases}
+x p_1(w), & w\le w_1 \\
+x p_2(s), & w_1<w\le w_2 \\
+x p_3(s), & w_2<w
+\end{cases}
+$$
+
+### パラメータ設定例
+
+| $w_1$ | $w_2$ | $p_1$ 次数 | $p_2$ 次数 | $p_3$ 次数 |
+| :--- | :--- | :---: | :---: | :---: |
+| 6.25 | 16.0 | 22 | 18 | 16 |
+| 6.25 | 36.0 | 22 | 26 | n/a |
+
+<!--
+倍精度の場合も同様の戦略ですが、より高い精度($10^{-16}$)が求められるため、尾部領域を分割するか、次数を上げる必要があります。
+解析にはMATLABの可変精度演算（Symbolic Toolbox）を使用して、倍精度以上の精度で係数を決定しました。
+-->
+
+---
+
+# 精度と誤差解析
+
+浮動小数点演算における主な誤差要因：
+
+1.  **入力変換**: $(1-x)(1+x)$
+2.  **対数計算**: $\log$
+3.  **多項式評価**: ホーナー法等
+
+$$
+\text{全体誤差} \approx \underbrace{(\varepsilon_1+\varepsilon_2)\frac{p_1'(w)}{p_1(w)}}_{\text{引数誤差の増幅}} + \underbrace{\varepsilon_3}_{\text{関数近似}} + \underbrace{\varepsilon_4}_{\text{演算誤差}}
+$$
+
+<div class="grid grid-cols-2 gap-4 mt-4 bg-gray-100 p-4 rounded dark:bg-gray-800">
+<div>
+
+**単精度 (SP)**
+- 推定最大誤差: **4 ulp**
+- 実測最大誤差: $7 \times 10^{-7}$
+- **既存実装より高精度**
+
+</div>
+<div>
+
+**倍精度 (DP)**
+- 推定最大誤差: **3 ulp**
+- 実測差分: $2 \times 10^{-15}$
+- 既存実装と同等
+
+</div>
+</div>
+
+<!--
+解析の結果、単精度では最大 4 ulp (units in last place)、倍精度では 3 ulp 程度の誤差に収まることが示されました。
+実際の実装でも、既存のCUDAライブラリと比較して単精度ではむしろ精度が向上しており、倍精度でも遜色ない結果が得られています。
+-->
+
+---
+
+# 性能評価 (ベンチマーク)
+
+100M 個の要素に対する計算時間 (ms) の比較 (C2050 GPU)
+
+| テスト条件 | SP (旧) | SP (新) | DP (旧) | DP (新) |
+| :--- | :---: | :---: | :---: | :---: |
+| **Uniform (ランダム入力)** | 31 | **10** <span class="text-green-500 text-sm">(-67%)</span> | 114 | **49** <span class="text-green-500 text-sm">(-57%)</span> |
+| **Constant (一定入力)** | 11 | **9** | 30 | 48 <span class="text-red-500 text-sm">(+60%)</span> |
+
+- **Uniform**: ランダムな入力（モンテカルロ法など）で **約3倍** 高速化。
+- **Constant**: 全スレッドが同じ値を計算する場合。
+    - SP: 同等。
+    - DP: 常に $\log$ を計算するオーバーヘッドにより遅くなる場合がある。
+
+<!--
+結果は劇的です。
+ランダムな入力（Uniform）の場合、従来のダイバージェンスの影響を排除できたため、単精度・倍精度ともに大幅な高速化（約3倍）を達成しました。
+一方、入力が一定（Constant）の場合、分岐予測が効く従来法に対し、常に重い計算を行う新手法は（特に倍精度で）不利になる場合があります。
+しかし、主な用途であるモンテカルロ・シミュレーションではUniformな入力が一般的であるため、この特性は非常に有利です。
+-->
+
+---
+
+# 実装コード例 (CUDA)
+
+```cpp {all|4-5|6-17|18-28}
+__inline__ __device__ float MBG_erfinv(float x)
+{
+    float w, p;
+    // 重い計算(log)を全員が実行（ダイバージェンス回避）
+    w = - __logf((1.0f-x)*(1.0f+x));
+    
+    if ( w < 5.000000f ) {
+        // 中心領域（97%以上の確率でここを通る）
+        w = w - 2.500000f;
+        p = 2.81022636e-08f;
+        p = 3.43273939e-07f + p*w;
+        // ... (多項式評価) ...
+        p = 1.50140941f + p*w;
+    }
+    else {
+        // 尾部領域（3%未満）
+        w = sqrtf(w) - 3.000000f;
+        p = -0.000200214257f;
+        p = 0.000100950558f + p*w;
+        // ... (多項式評価) ...
+        p = 2.83297682f + p*w;
+    }
+    return p*x;
+}
+```
+
+<!--
+実際のコードは非常にシンプルです。
+最初に `logf` を計算していますが、これは条件分岐の外にあるため、全スレッドが同期して実行します。
+その後の `if` 分岐で多項式評価を行いますが、確率的にほぼ全ての確率で `if` の中（中心領域）が実行されるため、ワープ内の待機時間は最小限になります。
+-->
+
+---
+
+# 結論
+
+<div class="p-6 bg-blue-50 rounded dark:bg-blue-900 mb-6">
+
+**GPU の特性（SIMT）に合わせたアルゴリズム再設計により、<br>従来法に比べ大幅な高速化を実現可能。**
+
+</div>
+
+### ポイント
+- **ワープ・ダイバージェンスの回避**: CPU向けの「平均コスト最適化」から GPU向けの「最悪ケース最適化」へ。
+- **性能**: ランダム入力に対しては **最大3倍** 高速。
+- **トレードオフ**: 一定入力に対しては遅くなる可能性があるが、主用途（乱数生成）では問題になりにくい。
+
+### 応用
+- この「主要な分岐を1つに絞る」アプローチは、他の特殊関数の近似にも応用可能です。
+
+<!--
+本研究は、単に erfinv を高速化しただけでなく、GPUプログラミングにおけるアルゴリズム設計の重要な教訓を示しています。
+CPU向けに最適化された「平均的に速い」コードが、GPUでは「最悪ケース」の性能を引き出してしまう可能性があること。
+そして、処理を均質化することで、GPUの並列性能を最大限に引き出せることです。
+-->

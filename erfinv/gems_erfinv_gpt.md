@@ -1,7 +1,7 @@
 
 # erfinv 関数の近似
 
-Mike Giles∗
+Mike Giles
 
 逆誤差関数 **erfinv** は数学ライブラリの標準的な構成要素であり、特に一様乱数を正規乱数へ変換する統計的応用で有用である。本章では、GPU 実行におけるワープ・ダイバージェンス（warp divergence）を大幅に低減することで、**erfinv** を従来よりも顕著に効率よく計算できる新しい近似法を提示する。
 
@@ -108,6 +108,8 @@ $$
 \left(p(w)-\frac{\mathrm{erfinv}(x)}{x}\right)
 \right)^2 dw.
 $$
+
+![](slidev/images/fig1.png)
 
 図1 $\mathrm{erfinv}(x)/x$ を $w$ および $s\equiv\sqrt{w}$ に対してプロット。
 
