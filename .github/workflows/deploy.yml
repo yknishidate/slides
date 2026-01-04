@@ -54,6 +54,16 @@ jobs:
           REPO_NAME=$(echo "${{ github.repository }}" | awk -F '/' '{print $2}')
           pnpm build --base /$REPO_NAME/water_wavelets/ --out ../dist/water_wavelets
 
+      - name: Install Dependencies (Characteristic Map)
+        working-directory: ./characteristic_map
+        run: pnpm install
+
+      - name: Build Characteristic Map
+        working-directory: ./characteristic_map
+        run: |
+          REPO_NAME=$(echo "${{ github.repository }}" | awk -F '/' '{print $2}')
+          pnpm build --base /$REPO_NAME/characteristic_map/ --out ../dist/characteristic_map
+
       - name: Copy Index
         run: |
           mkdir -p dist
